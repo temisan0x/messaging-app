@@ -1,4 +1,3 @@
-// Check if the user is logged in
 window.onload = function () {
     const isLoggedIn = localStorage.getItem("isLoggedIn");
   
@@ -7,7 +6,6 @@ window.onload = function () {
       window.location.href = "login.html"; // Redirect immediately
     }
   
-    // Add logout functionality
     const logoutButton = document.getElementById("logout-button");
     if (logoutButton) {
       logoutButton.addEventListener("click", function () {
