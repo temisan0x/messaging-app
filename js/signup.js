@@ -1,3 +1,16 @@
+// Check if the user is already logged in
+window.onload = function () {
+    const isLoggedIn = localStorage.getItem("isLoggedIn");
+  
+    // Redirect to chat app if already logged in
+    if (isLoggedIn === "true") {
+      window.location.href = "index.html"; // Redirect immediately
+    }
+  };
+  
+  // Signup form submission
+
+
 document.getElementById("signup-form").addEventListener("submit", function (e) {
     e.preventDefault(); // Prevent form submission
   
