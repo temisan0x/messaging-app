@@ -1,4 +1,3 @@
-// Check if the user is already logged in
 window.onload = function () {
   const isLoggedIn = localStorage.getItem("isLoggedIn");
 

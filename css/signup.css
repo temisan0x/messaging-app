@@ -76,14 +76,18 @@ body {
 }
 
 /* Error message styling */
-.error-message {
+.firstName-error,
+.lastName-error,
+.email-error,
+.password-error,
+.confirm-password-error {
   display: block;
   color: #ff6b6b;
   font-size: 12px;
   margin-top: 5px;
   font-weight: 500;
   transition: opacity 0.3s;
-  height: 16px; 
+  height: 16px;
 }
 
 .form-group input.error {
