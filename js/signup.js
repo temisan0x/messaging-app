@@ -57,9 +57,21 @@ document.getElementById("signup-form").addEventListener("submit", function (e) {
   if (!isValid) {
     return;
   }
-  // Create user object
+
+  // Retrieve existing users from local storage
+  const users = JSON.parse(localStorage.getItem("users")) || [];
+  const existingUser = users.some((user) => user.email === email);
+
+  if (existingUser) {
+    alert("Email already registered. Please log in.");
+    console.log("stored user data", localStorage.getItem("users"))
+    return;
+  }
+
+  //create user object
+
   const newUser = {
-    id: Date.now(), // Unique ID for each user
+    id: Date.now(),
     firstName,
     lastName,
     email,
@@ -68,22 +80,9 @@ document.getElementById("signup-form").addEventListener("submit", function (e) {
     messages: [],
   };
 
-  // Retrieve existing users from local storage
-  const users = JSON.parse(localStorage.getItem("users")) || [];
-  const existingUser = users.some((user) => user.email === email);
-
-  // Add new user to the array
   users.push(newUser);
 
-  // Save updated users array to local storage
   localStorage.setItem("users", JSON.stringify(users));
-
-
-  if (existingUser) {
-    alert("Email already registered. Please log in.");
-    console.log("stored user data", localStorage.getItem("users"))
-    return;
-  }
 
   // Set the current user as logged in
   localStorage.setItem("currentUser", JSON.stringify(newUser));
