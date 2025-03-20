@@ -2,7 +2,7 @@ window.onload = function () {
   const isLoggedIn = localStorage.getItem("isLoggedIn");
 
   if (isLoggedIn === "true") {
-    window.location.href = "index.html";
+    window.location.href = "login.html";
   }
 };
 
@@ -58,6 +58,11 @@ document.getElementById("signup-form").addEventListener("submit", function (e) {
     return;
   }
 
+  //Hash password
+  
+  const salt = bcrypt.genSaltSync(10);
+  const hashPassword = bcrypt.hashSync(password, salt);
+
   // Retrieve existing users from local storage
   const users = JSON.parse(localStorage.getItem("users")) || [];
   const existingUser = users.some((user) => user.email === email);
@@ -75,11 +80,12 @@ document.getElementById("signup-form").addEventListener("submit", function (e) {
     firstName,
     lastName,
     email,
-    password,
+    hashPassword,
     isLoggedIn: false,
     messages: [],
   };
 
+  console.log(newUser);
   users.push(newUser);
 
   localStorage.setItem("users", JSON.stringify(users));
@@ -89,6 +95,6 @@ document.getElementById("signup-form").addEventListener("submit", function (e) {
   localStorage.setItem("isLoggedIn", "true");
 
   // Redirect to the chat app (index.html)
-  window.location.href = "index.html";
+  window.location.href = "login.html";
 });
 

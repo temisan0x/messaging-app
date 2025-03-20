@@ -50,7 +50,7 @@ window.onload = function () {
         let userIndex = users.findIndex((user) => user.id == userid)
 
         if (userIndex > -1) {
-          users[userIndex].messages = receiverMessages
+          users[userIndex].messages = receiverMessages;
           localStorage.setItem("users", JSON.stringify(users))
 
           let newMessage = document.createElement("div");

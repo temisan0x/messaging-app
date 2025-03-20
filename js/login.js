@@ -39,8 +39,14 @@ document.getElementById("login-form").addEventListener("submit", function (e) {
     return;
   }
 
-  if (email === user.email && password === user.password) {
+  const passwordValid = bcrypt.compareSync(password, user.password);
+
+  if (passwordValid) {
+    // Set login status
     localStorage.setItem("isLoggedIn", "true");
+    localStorage.setItem("currentUser", JSON.stringify(user));
+
+    // Redirect to the chat app (index.html)
     window.location.href = "index.html";
   } else {
     alert("Invalid email or password.");
