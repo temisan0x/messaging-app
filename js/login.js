@@ -32,7 +32,6 @@ document.getElementById("login-form").addEventListener("submit", function (e) {
   }
 
   const users = JSON.parse(localStorage.getItem("users")) || [];
-
   const user = users.find((user) => user.email === email);
 
   if (!user) {

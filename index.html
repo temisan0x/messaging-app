@@ -9,16 +9,15 @@
 
   <body>
     <div class="container">
-      <!-- Friends sidebar -->
       <aside class="friends-sidebar">
         <div class="friends-header">
-          <h3>Friends</h3>
+          <span id="username"><h3><span id="user-firstname"></span>'s Friends</h3></span>
         </div>
         <div class="search-bar">
           <input type="text" placeholder="Search friends..." />
         </div>
         <div class="friends-list">
-      
+          <!--implement script here-->
         </div>
       </aside>
 
@@ -36,22 +35,10 @@
           <button id="logout-button" class="logout-button">Logout</button>
         </header>
         <div class="chat-messages">
-          <div class="message received">
-            <div class="message-text">Hi</div>
-            <div class="message-time">10:00 AM</div>
-          </div>
-          <div class="message sent">
-            <div class="message-text">Hello! How are you.</div>
-            <div class="message-time">10:01 AM</div>
-          </div>
-          <div class="message received">
-            <div class="message-text">Doing great</div>
-            <div class="message-time">10:03 AM</div>
-          </div>
         </div>
         <div class="chat-input">
-          <input type="text" placeholder="Type a message..." />
-          <button>Send</button>
+          <input type="text" id="message" placeholder="Type a message..." />
+          <button id="sendBtn">Send</button>
         </div>
       </main>
     </div>
