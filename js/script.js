@@ -26,7 +26,7 @@ window.onload = function () {
       document.querySelector("div.current-friend > div.friend-name").innerText = friend.firstName + " " + friend.lastName
 
       let sendBtn = document.querySelector("#sendBtn");
-      sendBtn.onclick = function () { send(friend.id) }; 
+      sendBtn.onclick = function () { send(friend.id) };
       getMessages(friend.id);
       console.log(currentUser.messages);
     }

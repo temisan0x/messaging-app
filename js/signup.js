@@ -38,7 +38,7 @@ document.getElementById("signup-form").addEventListener("submit", function (e) {
     document.getElementById("email-error").textContent = "";
   }
   if (!password) {
-    document.getElementById("password-error").textContent = "Please fill in your email address";
+    document.getElementById("password-error").textContent = "Please fill in your password";
     isValid = false;
   } else {
     document.getElementById("password-error").textContent = "";
