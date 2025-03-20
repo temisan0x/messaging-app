@@ -2,7 +2,7 @@ window.onload = function () {
   const isLoggedIn = localStorage.getItem("isLoggedIn");
 
   if (isLoggedIn === "true") {
-    window.location.href = "login.html";
+    window.location.href = "index.html";
   }
 };
 
@@ -89,6 +89,6 @@ document.getElementById("signup-form").addEventListener("submit", function (e) {
   localStorage.setItem("isLoggedIn", "true");
 
   // Redirect to the chat app (index.html)
-  window.location.href = "login.html";
+  window.location.href = "index.html";
 });
 
