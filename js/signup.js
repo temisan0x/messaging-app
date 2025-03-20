@@ -89,6 +89,6 @@ document.getElementById("signup-form").addEventListener("submit", function (e) {
   localStorage.setItem("isLoggedIn", "true");
 
   // Redirect to the chat app (index.html)
-  window.location.href = "index.html";
+  window.location.href = "login.html";
 });
 
