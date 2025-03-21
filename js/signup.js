@@ -2,7 +2,7 @@ window.onload = function () {
   const isLoggedIn = localStorage.getItem("isLoggedIn");
 
   if (isLoggedIn === "true") {
-    window.location.href = "login.html";
+    window.location.href = "index.html";
   }
 };
 
@@ -29,7 +29,7 @@ document.getElementById("signup-form").addEventListener("submit", function (e) {
     document.getElementById("lastName-error").textContent = "Please fill in your last name";
     isValid = false;
   } else {
-    document.getElementById("firstName-error").textContent = "";
+    document.getElementById("lastName-error").textContent = "";
   }
   if (!email) {
     document.getElementById("email-error").textContent = "Please fill in your email address";
@@ -49,7 +49,7 @@ document.getElementById("signup-form").addEventListener("submit", function (e) {
   } else {
     document.getElementById("confirm-password-error").textContent = "";
   }
-  if (password != confirmPassword) {
+  if (password !== confirmPassword) {
     document.getElementById("confirm-password-error").textContent = "Passwords do not match";
     isValid = false;
   }
@@ -59,9 +59,9 @@ document.getElementById("signup-form").addEventListener("submit", function (e) {
   }
 
   //Hash password
-  
-  const salt = bcrypt.genSaltSync(10);
-  const hashPassword = bcrypt.hashSync(password, salt);
+
+  const salt = bcrypt.genSaltSync(10); //why use genSaltSync(10)
+  const hashedPassword = bcrypt.hashSync(password, salt);
 
   // Retrieve existing users from local storage
   const users = JSON.parse(localStorage.getItem("users")) || [];
@@ -80,12 +80,11 @@ document.getElementById("signup-form").addEventListener("submit", function (e) {
     firstName,
     lastName,
     email,
-    hashPassword,
+    password: hashedPassword,
     isLoggedIn: false,
     messages: [],
   };
 
-  console.log(newUser);
   users.push(newUser);
 
   localStorage.setItem("users", JSON.stringify(users));
@@ -95,6 +94,5 @@ document.getElementById("signup-form").addEventListener("submit", function (e) {
   localStorage.setItem("isLoggedIn", "true");
 
   // Redirect to the chat app (index.html)
-  window.location.href = "login.html";
+  window.location.href = "index.html";
 });
-
