@@ -1,8 +1,8 @@
 window.onload = function () {
-  const isLoggedIn = localStorage.getItem("isLoggedIn");
+  const isLoggedIn = sessionStorage.getItem("isLoggedIn");
 
   if (isLoggedIn === "true") {
-    window.location.href = "index.html";
+    window.location.href = "chat.html";
   }
 };
 
@@ -44,7 +44,7 @@ document.getElementById("signup-form").addEventListener("submit", function (e) {
     document.getElementById("password-error").textContent = "";
   }
   if (!confirmPassword) {
-    document.getElementById("confirm-password-error").textContent = "Please confirm your password";
+    document.getElementById("confirm-password-error").textContent = "Please fill in your password";
     isValid = false;
   } else {
     document.getElementById("confirm-password-error").textContent = "";
@@ -89,10 +89,13 @@ document.getElementById("signup-form").addEventListener("submit", function (e) {
 
   localStorage.setItem("users", JSON.stringify(users));
 
-  // Set the current user as logged in
-  localStorage.setItem("currentUser", JSON.stringify(newUser));
-  localStorage.setItem("isLoggedIn", "true");
+  sessionStorage.setItem("currentUser", JSON.stringify(newUser));
 
-  // Redirect to the chat app (index.html)
-  window.location.href = "index.html";
+  // Set the current user as logged in
+  // localStorage.setItem("currentUser", JSON.stringify(newUser));
+  sessionStorage.setItem("isLoggedIn", "true");
+
+  // Redirect to the chat app (chat.html)
+  window.location.href = "chat.html";
 });
+
