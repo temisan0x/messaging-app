@@ -44,7 +44,6 @@ document.getElementById("login-form").addEventListener("submit", function (e) {
   // Get users from localStorage
   const users = JSON.parse(localStorage.getItem("users")) || [];
   if (!Array.isArray(users)) {
-    console.error("Users data corrupted in localStorage");
     document.getElementById("email-error").textContent = "System error, please try again later";
     return;
   }
@@ -61,26 +60,20 @@ document.getElementById("login-form").addEventListener("submit", function (e) {
   // Check if password hash exists
   if (!user.password) {
     console.error("User object missing password field:", user);
-    document.getElementById("password-error").textContent = "Account data corrupted";
+    document.getElementById("password-error").textContent = "Your Password is incorrect";
     return;
   }
 
   try {
-    console.log("Attempting password comparison:");
-    console.log("Plain password:", password, "type:", typeof password);
-    console.log("Stored hash:", user.password, "type:", typeof user.password);
 
     const passwordValid = bcrypt.compareSync(password, user.password);
 
     if (passwordValid) {
-      const updatedUsers = users.map(u =>
-        u.email === user.email ? { ...u, isLoggedIn: true } : u
-      );
-
-      localStorage.setItem("users", JSON.stringify(updatedUsers));
+      localStorage.setItem("users", JSON.stringify(user));
       localStorage.setItem("isLoggedIn", "true");
       localStorage.setItem("currentUser", JSON.stringify(user));
       window.location.href = "index.html";
+    
     } else {
       document.getElementById("password-error").textContent = "Invalid password";
     }

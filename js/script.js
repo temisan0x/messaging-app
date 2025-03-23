@@ -129,7 +129,8 @@ window.onload = function () {
   const logoutButton = document.getElementById("logout-button");
   if (logoutButton) {
     logoutButton.addEventListener("click", function () {
-      localStorage.removeItem("isLoggedIn");
+      
+      console.log(localStorage.removeItem("isLoggedIn"));
       window.location.href = "login.html";
     });
   }
