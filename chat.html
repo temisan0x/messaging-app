@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chat App</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+
+  <body>
+    <div class="container">
+      <aside class="friends-sidebar">
+        <div class="friends-header">
+          <div class="user-info">
+            <img
+              src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?q=80&w=1045&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3Dk"
+              alt="User avatar"
+              class="user-avatar"
+            />
+            <h3 id="username"></h3>
+          </div>
+          <button class="close-sidebar"></button>
+        </div>
+        <div class="search-bar">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="search-friends" placeholder="Search friends..." />
+        </div>
+        <div class="friends-list"></div>
+      </aside>
+
+      <!-- Chat section -->
+      <main class="chat-section">
+        <header class="chat-header">
+          <button class="mobile-menu-toggle"></button>
+          <div class="current-friend">
+            <div class="friend-name current-friend-name"></div>
+          </div>
+          <button id="logout-button" class="logout-button">Logout</button>
+        </header>
+        <div class="chat-messages"></div>
+        <div class="typing-indicator">
+          <div class="dot"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+        </div>
+        <div class="chat-input">
+          <textarea id="message" placeholder="Type a message..."></textarea>
+          <button id="sendBtn">Send</button>
+        </div>
+      </main>
+    </div>
+    <script src="js/chat.js"></script>
+  </body>
+</html>
