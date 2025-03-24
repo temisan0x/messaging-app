@@ -4,7 +4,7 @@ window.onload = function () {
       const isLoggedIn = sessionStorage.getItem("isLoggedIn");
       const currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
       
-      if (isLoggedIn !== "true" || !currentUser?.id) {
+      if (isLoggedIn !== "true" || !currentUser?.id || typeof currentUser.id !== "number") {
         sessionStorage.clear();
         window.location.href = "login.html";
         return false;
@@ -19,6 +19,7 @@ window.onload = function () {
 
   if (!validateSession()) return;
 
+  // Cross-tab session monitoring
   window.addEventListener('storage', (event) => {
     if (event.key === 'isLoggedIn' || event.key === 'currentUser') {
       if (!validateSession()) {
@@ -27,6 +28,7 @@ window.onload = function () {
     }
   });
 
+  // DOM elements
   const mobileMenuToggle = document.querySelector(".mobile-menu-toggle");
   const friendsSidebar = document.querySelector(".friends-sidebar");
   const closeSidebarButton = document.querySelector(".close-sidebar");
