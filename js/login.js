@@ -1,13 +1,12 @@
 document.getElementById("login-form").addEventListener("submit", function (e) {
   e.preventDefault();
-  
-  // Get input values with safeguards against null/undefined
+
   const emailElement = document.getElementById("email");
   const passwordElement = document.getElementById("password");
   
   if (!emailElement || !passwordElement) {
     console.error("Form elements not found in DOM");
-    alert("Login form is broken. Contact support.");
+    alert("Login form is broken.");
     return;
   }
   
@@ -86,7 +85,7 @@ document.getElementById("login-form").addEventListener("submit", function (e) {
       // FIX: Store user in correct sessionStorage key
       sessionStorage.setItem("currentUser", JSON.stringify(user));
       sessionStorage.setItem("isLoggedIn", "true");
-      window.location.href = "chat.html";
+      window.location.href = "index.html";
     } else {
       document.getElementById("password-error").textContent = "Invalid password";
     }
