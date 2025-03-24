@@ -406,9 +406,6 @@ body {
   }
 }
 
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
 
 /* Mobile Styles */
 @media (max-width: 768px) {

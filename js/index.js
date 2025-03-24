@@ -1,34 +1,9 @@
+const isLoggedIn = sessionStorage.getItem("isLoggedIn");
+if (isLoggedIn !== "true") {
+  window.location.href = "login.html";
+}
+
 window.onload = function () {
-  function validateSession() {
-    try {
-      const isLoggedIn = sessionStorage.getItem("isLoggedIn");
-      const currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
-      
-      if (isLoggedIn !== "true" || !currentUser?.id || typeof currentUser.id !== "number") {
-        sessionStorage.clear();
-        window.location.href = "login.html";
-        return false;
-      }
-      return true;
-    } catch (e) {
-      sessionStorage.clear();
-      window.location.href = "login.html";
-      return false;
-    }
-  }
-
-  if (!validateSession()) return;
-
-  // Cross-tab session monitoring
-  window.addEventListener('storage', (event) => {
-    if (event.key === 'isLoggedIn' || event.key === 'currentUser') {
-      if (!validateSession()) {
-        window.location.href = "login.html";
-      }
-    }
-  });
-
-  // DOM elements
   const mobileMenuToggle = document.querySelector(".mobile-menu-toggle");
   const friendsSidebar = document.querySelector(".friends-sidebar");
   const closeSidebarButton = document.querySelector(".close-sidebar");
@@ -38,44 +13,45 @@ window.onload = function () {
   const textarea = document.querySelector(".chat-input textarea");
   const typingIndicator = document.querySelector(".typing-indicator");
 
-  // Mobile menu toggle
   if (mobileMenuToggle && friendsSidebar) {
     mobileMenuToggle.addEventListener("click", (e) => {
-      if (!validateSession()) return;
       e.stopPropagation();
       friendsSidebar.classList.toggle("visible");
     });
 
     document.addEventListener("click", (e) => {
-      if (!validateSession()) return;
-      if (friendsSidebar.classList.contains("visible") &&
-          !friendsSidebar.contains(e.target) &&
-          e.target !== mobileMenuToggle) {
+      if (
+        friendsSidebar.classList.contains("visible") &&
+        !friendsSidebar.contains(e.target) &&
+        e.target !== mobileMenuToggle
+      ) {
         friendsSidebar.classList.remove("visible");
       }
     });
   }
 
-  // Close sidebar
   if (closeSidebarButton) {
     closeSidebarButton.addEventListener("click", () => {
-      if (!validateSession()) return;
       friendsSidebar.classList.remove("visible");
     });
   }
 
-  // Search functionality
   function filterFriends() {
-    if (!validateSession()) return;
     const searchTerm = searchInput.value.toLowerCase();
     const friendElements = friendsList.querySelectorAll(".friend");
 
     friendElements.forEach((friendElement) => {
-      const friendName = friendElement.querySelector(".friend-name").textContent.toLowerCase();
-      friendElement.style.display = friendName.includes(searchTerm) ? "flex" : "none";
+      const friendName = friendElement
+        .querySelector(".friend-name")
+        .textContent.toLowerCase();
+      friendElement.style.display = friendName.includes(searchTerm)
+        ? "flex"
+        : "none";
     });
 
-    const visibleFriends = Array.from(friendElements).filter(el => el.style.display !== "none");
+    const visibleFriends = Array.from(friendElements).filter(
+      (el) => el.style.display !== "none"
+    );
     if (visibleFriends.length === 0) {
       if (!friendsList.querySelector(".no-friends")) {
         const noFriendsMessage = document.createElement("div");
@@ -96,18 +72,18 @@ window.onload = function () {
     searchInput.addEventListener("input", filterFriends);
   }
 
-  // User data handling
+  function forceLogout() {
+    sessionStorage.removeItem("isLoggedIn");
+    sessionStorage.removeItem("currentUser");
+    window.location.href = "login.html";
+  }
+
   let currentUser;
   try {
     currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
-    if (!currentUser) {
-      sessionStorage.clear();
-      window.location.href = "login.html";
-      return;
-    }
+    if (!currentUser) forceLogout();
   } catch (error) {
-    sessionStorage.clear();
-    window.location.href = "login.html";
+    forceLogout();
     return;
   }
 
@@ -115,7 +91,6 @@ window.onload = function () {
     usernameElement.textContent = `Gm ${currentUser.firstName}`;
   }
 
-  // Friends list management
   let users = [];
   try {
     const usersData = localStorage.getItem("users");
@@ -129,9 +104,12 @@ window.onload = function () {
 
   let friends = users.filter((user) => user.id != currentUser.id);
 
-  // Avatar generation
   function generateAvatar(name) {
-    const initials = name.split(" ").map(n => n[0]).join("").toUpperCase();
+    const initials = name
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase();
     const canvas = document.createElement("canvas");
     canvas.width = 40;
     canvas.height = 40;
@@ -146,10 +124,8 @@ window.onload = function () {
     return canvas.toDataURL();
   }
 
-  // Typing indicator
   let typingTimeout;
   textarea.addEventListener("input", () => {
-    if (!validateSession()) return;
     typingIndicator.classList.add("visible");
     clearTimeout(typingTimeout);
     typingTimeout = setTimeout(() => {
@@ -157,12 +133,9 @@ window.onload = function () {
     }, 2000);
   });
 
-  // Chat functionality
   let selectedFriendId = null;
 
   const myFriend = (id) => {
-    if (!validateSession()) return;
-    
     document.querySelector(".friend.active")?.classList.remove("active");
     const selectedElement = document.getElementById(`friend-${id}`);
     if (selectedElement) {
@@ -192,12 +165,13 @@ window.onload = function () {
   };
 
   function getCurrentTime() {
-    return new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    return new Date().toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
   }
 
   function send(userid) {
-    if (!validateSession()) return;
-    
     const messageInput = document.getElementById("message");
     let message = messageInput.value.trim();
     if (!message) return;
@@ -210,9 +184,10 @@ window.onload = function () {
     };
 
     let conversations = JSON.parse(localStorage.getItem("conversations")) || {};
-    const conversationId = currentUser.id < userid 
-      ? `${currentUser.id}_${userid}`
-      : `${userid}_${currentUser.id}`;
+    const conversationId =
+      currentUser.id < userid
+        ? `${currentUser.id}_${userid}`
+        : `${userid}_${currentUser.id}`;
 
     if (!conversations[conversationId]) {
       conversations[conversationId] = [];
@@ -225,9 +200,9 @@ window.onload = function () {
     let newMessageElement = document.createElement("div");
     newMessageElement.className = "message sent";
     newMessageElement.innerHTML = `
-      <div class="message-text">${message}</div>
-      <div class="message-time">${timeString}</div>
-    `;
+        <div class="message-text">${message}</div>
+        <div class="message-time">${timeString}</div>
+      `;
 
     let messagesContainer = document.querySelector(".chat-messages");
     if (messagesContainer) {
@@ -240,8 +215,6 @@ window.onload = function () {
   }
 
   function updateFriendListItem(friendId, message, time) {
-    if (!validateSession()) return;
-    
     const friendElement = document.getElementById(`friend-${friendId}`);
     if (friendElement) {
       const lastMessageElement = friendElement.querySelector(".last-message");
@@ -259,18 +232,18 @@ window.onload = function () {
   }
 
   function checkForNewMessages() {
-    if (!validateSession()) return;
-    
     let conversations = JSON.parse(localStorage.getItem("conversations")) || {};
 
     friends.forEach((friend) => {
-      const conversationId = currentUser.id < friend.id
-        ? `${currentUser.id}_${friend.id}`
-        : `${friend.id}_${currentUser.id}`;
+      const conversationId =
+        currentUser.id < friend.id
+          ? `${currentUser.id}_${friend.id}`
+          : `${friend.id}_${currentUser.id}`;
 
       const convoMessages = conversations[conversationId] || [];
       const hasUnreadMessages = convoMessages.some(
-        (msg) => msg.sender == friend.id && msg.timestamp > (friend.lastSeen || 0)
+        (msg) =>
+          msg.sender == friend.id && msg.timestamp > (friend.lastSeen || 0)
       );
 
       if (hasUnreadMessages && selectedFriendId != friend.id) {
@@ -289,39 +262,40 @@ window.onload = function () {
   }
 
   function getMessages(userid) {
-    if (!validateSession()) return;
-    
     let messagesContainer = document.querySelector(".chat-messages");
     if (!messagesContainer) return;
 
     messagesContainer.innerHTML = "";
-    const conversationId = currentUser.id < userid
-      ? `${currentUser.id}_${userid}`
-      : `${userid}_${currentUser.id}`;
+    const conversationId =
+      currentUser.id < userid
+        ? `${currentUser.id}_${userid}`
+        : `${userid}_${currentUser.id}`;
 
     let conversations = JSON.parse(localStorage.getItem("conversations")) || {};
     let conversationMessages = conversations[conversationId] || [];
     conversationMessages.sort((a, b) => a.timestamp - b.timestamp);
 
     conversationMessages.forEach((message) => {
-      let timeString = message.timestamp ? new Date(message.timestamp).toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }) : "";
+      let timeString = message.timestamp
+        ? new Date(message.timestamp).toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          })
+        : "";
 
       let newMessage = document.createElement("div");
-      newMessage.className = message.sender == currentUser.id ? "message sent" : "message received";
+      newMessage.className =
+        message.sender == currentUser.id ? "message sent" : "message received";
       newMessage.innerHTML = `
-        <div class="message-text">${message.message}</div>
-        <div class="message-time">${timeString}</div>
-      `;
+          <div class="message-text">${message.message}</div>
+          <div class="message-time">${timeString}</div>
+        `;
       messagesContainer.appendChild(newMessage);
     });
 
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
   }
 
-  // Initialize friends list
   if (friends.length === 0) {
     friendsList.innerHTML = "<div class='no-friends'>No friends found</div>";
   } else {
@@ -333,11 +307,13 @@ window.onload = function () {
         myFriend(friend.id);
       };
 
-      const conversationId = currentUser.id < friend.id
-        ? `${currentUser.id}_${friend.id}`
-        : `${friend.id}_${currentUser.id}`;
+      const conversationId =
+        currentUser.id < friend.id
+          ? `${currentUser.id}_${friend.id}`
+          : `${friend.id}_${currentUser.id}`;
 
-      const conversations = JSON.parse(localStorage.getItem("conversations")) || {};
+      const conversations =
+        JSON.parse(localStorage.getItem("conversations")) || {};
       const convoMessages = conversations[conversationId] || [];
 
       let lastMessageText = "";
@@ -345,9 +321,10 @@ window.onload = function () {
 
       if (convoMessages.length > 0) {
         const lastMsg = convoMessages[convoMessages.length - 1];
-        lastMessageText = lastMsg.message.length > 20
-          ? lastMsg.message.substring(0, 20) + "..."
-          : lastMsg.message;
+        lastMessageText =
+          lastMsg.message.length > 20
+            ? lastMsg.message.substring(0, 20) + "..."
+            : lastMsg.message;
 
         if (lastMsg.timestamp) {
           lastMessageTime = new Date(lastMsg.timestamp).toLocaleTimeString([], {
@@ -357,15 +334,17 @@ window.onload = function () {
         }
       }
 
-      const avatarSrc = generateAvatar(`${friend.firstName} ${friend.lastName}`);
+      const avatarSrc = generateAvatar(
+        `${friend.firstName} ${friend.lastName}`
+      );
       friendElement.innerHTML = `
-        <img src="${avatarSrc}" alt="${friend.firstName} ${friend.lastName} profile image" />
-        <div class="friend-info">
-          <div class="friend-name">${friend.firstName} ${friend.lastName}</div>
-          <div class="last-message">${lastMessageText}</div>
-        </div>
-        <div class="message-time">${lastMessageTime}</div>
-      `;
+          <img src="${avatarSrc}" alt="${friend.firstName} ${friend.lastName} profile image" />
+          <div class="friend-info">
+            <div class="friend-name">${friend.firstName} ${friend.lastName}</div>
+            <div class="last-message">${lastMessageText}</div>
+          </div>
+          <div class="message-time">${lastMessageTime}</div>
+        `;
       friendsList.appendChild(friendElement);
     });
 
@@ -374,12 +353,13 @@ window.onload = function () {
     }
   }
 
-  // Logout button
-  document.getElementById("logout-button").addEventListener("click", function () {
-    sessionStorage.clear();
-    window.location.href = "login.html";
-  });
+  document
+    .getElementById("logout-button")
+    .addEventListener("click", function () {
+      sessionStorage.removeItem("isLoggedIn");
+      sessionStorage.removeItem("currentUser");
+      window.location.href = "login.html";
+    });
 
-  // Periodic message check
   setInterval(checkForNewMessages, 3000);
 };
