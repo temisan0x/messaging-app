@@ -1,75 +1,68 @@
-const isLoggedIn = sessionStorage.getItem("isLoggedIn");
-if (isLoggedIn !== "true") {
-  window.location.href = "login.html";
-}
-
 window.onload = function () {
-  const mobileMenuToggle = document.querySelector(".mobile-menu-toggle");
-  const friendsSidebar = document.querySelector(".friends-sidebar");
-  const closeSidebarButton = document.querySelector(".close-sidebar");
-  const searchInput = document.getElementById("search-friends");
-  const friendsList = document.querySelector(".friends-list");
+  const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+  const friendsSidebar = document.querySelector('.friends-sidebar');
+  const closeSidebarButton = document.querySelector('.close-sidebar');
+  const searchInput = document.getElementById('search-friends');
+  const friendsList = document.querySelector('.friends-list');
   const usernameElement = document.getElementById("username");
-  const textarea = document.querySelector(".chat-input textarea");
-  const typingIndicator = document.querySelector(".typing-indicator");
+  const textarea = document.querySelector('.chat-input textarea');
+  const typingIndicator = document.querySelector('.typing-indicator');
 
   if (mobileMenuToggle && friendsSidebar) {
-    mobileMenuToggle.addEventListener("click", (e) => {
+    mobileMenuToggle.addEventListener('click', (e) => {
       e.stopPropagation();
-      friendsSidebar.classList.toggle("visible");
+      friendsSidebar.classList.toggle('visible');
     });
 
-    document.addEventListener("click", (e) => {
-      if (
-        friendsSidebar.classList.contains("visible") &&
-        !friendsSidebar.contains(e.target) &&
-        e.target !== mobileMenuToggle
-      ) {
-        friendsSidebar.classList.remove("visible");
+    document.addEventListener('click', (e) => {
+      if (friendsSidebar.classList.contains('visible') &&
+          !friendsSidebar.contains(e.target) &&
+          e.target !== mobileMenuToggle) {
+        friendsSidebar.classList.remove('visible');
       }
     });
   }
 
   if (closeSidebarButton) {
-    closeSidebarButton.addEventListener("click", () => {
-      friendsSidebar.classList.remove("visible");
+    closeSidebarButton.addEventListener('click', () => {
+      friendsSidebar.classList.remove('visible');
     });
   }
 
   function filterFriends() {
     const searchTerm = searchInput.value.toLowerCase();
-    const friendElements = friendsList.querySelectorAll(".friend");
+    const friendElements = friendsList.querySelectorAll('.friend');
 
     friendElements.forEach((friendElement) => {
-      const friendName = friendElement
-        .querySelector(".friend-name")
-        .textContent.toLowerCase();
-      friendElement.style.display = friendName.includes(searchTerm)
-        ? "flex"
-        : "none";
+      const friendName = friendElement.querySelector('.friend-name').textContent.toLowerCase();
+      friendElement.style.display = friendName.includes(searchTerm) ? 'flex' : 'none';
     });
 
-    const visibleFriends = Array.from(friendElements).filter(
-      (el) => el.style.display !== "none"
-    );
+    const visibleFriends = Array.from(friendElements).filter(el => el.style.display !== 'none');
     if (visibleFriends.length === 0) {
-      if (!friendsList.querySelector(".no-friends")) {
-        const noFriendsMessage = document.createElement("div");
-        noFriendsMessage.className = "no-friends";
-        noFriendsMessage.textContent = "No friends found";
-        noFriendsMessage.style.padding = "15px";
-        noFriendsMessage.style.color = "#a0a0a0";
-        noFriendsMessage.style.textAlign = "center";
+      if (!friendsList.querySelector('.no-friends')) {
+        const noFriendsMessage = document.createElement('div');
+        noFriendsMessage.className = 'no-friends';
+        noFriendsMessage.textContent = 'No friends found';
+        noFriendsMessage.style.padding = '15px';
+        noFriendsMessage.style.color = '#a0a0a0';
+        noFriendsMessage.style.textAlign = 'center';
         friendsList.appendChild(noFriendsMessage);
       }
     } else {
-      const noFriendsMessage = friendsList.querySelector(".no-friends");
+      const noFriendsMessage = friendsList.querySelector('.no-friends');
       if (noFriendsMessage) noFriendsMessage.remove();
     }
   }
 
   if (searchInput) {
-    searchInput.addEventListener("input", filterFriends);
+    searchInput.addEventListener('input', filterFriends);
+  }
+
+  const isLoggedIn = sessionStorage.getItem("isLoggedIn");
+  if (isLoggedIn !== "true") {
+    window.location.href = "login.html";
+    return;
   }
 
   function forceLogout() {
@@ -105,31 +98,27 @@ window.onload = function () {
   let friends = users.filter((user) => user.id != currentUser.id);
 
   function generateAvatar(name) {
-    const initials = name
-      .split(" ")
-      .map((n) => n[0])
-      .join("")
-      .toUpperCase();
-    const canvas = document.createElement("canvas");
+    const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
+    const canvas = document.createElement('canvas');
     canvas.width = 40;
     canvas.height = 40;
-    const ctx = canvas.getContext("2d");
-    const colors = ["#ff6b6b", "#90c4f9", "#00ff00", "#f1c40f", "#9b59b6"];
+    const ctx = canvas.getContext('2d');
+    const colors = ['#ff6b6b', '#90c4f9', '#00ff00', '#f1c40f', '#9b59b6'];
     ctx.fillStyle = colors[Math.floor(Math.random() * colors.length)];
     ctx.fillRect(0, 0, 40, 40);
-    ctx.fillStyle = "white";
-    ctx.font = "16px Arial";
-    ctx.textAlign = "center";
+    ctx.fillStyle = 'white';
+    ctx.font = '16px Arial';
+    ctx.textAlign = 'center';
     ctx.fillText(initials, 20, 28);
     return canvas.toDataURL();
   }
 
   let typingTimeout;
-  textarea.addEventListener("input", () => {
-    typingIndicator.classList.add("visible");
+  textarea.addEventListener('input', () => {
+    typingIndicator.classList.add('visible');
     clearTimeout(typingTimeout);
     typingTimeout = setTimeout(() => {
-      typingIndicator.classList.remove("visible");
+      typingIndicator.classList.remove('visible');
     }, 2000);
   });
 
@@ -141,7 +130,7 @@ window.onload = function () {
     if (selectedElement) {
       selectedElement.classList.add("active");
       selectedElement.querySelector(".unread-badge")?.remove();
-      selectedElement.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      selectedElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
 
     let friend = users.find((user) => user.id == id);
@@ -158,17 +147,14 @@ window.onload = function () {
     };
 
     getMessages(friend.id);
-
+    
     if (window.innerWidth <= 768) {
-      friendsSidebar.classList.remove("visible");
+      friendsSidebar.classList.remove('visible');
     }
   };
 
   function getCurrentTime() {
-    return new Date().toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
+    return new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
   }
 
   function send(userid) {
@@ -184,10 +170,9 @@ window.onload = function () {
     };
 
     let conversations = JSON.parse(localStorage.getItem("conversations")) || {};
-    const conversationId =
-      currentUser.id < userid
-        ? `${currentUser.id}_${userid}`
-        : `${userid}_${currentUser.id}`;
+    const conversationId = currentUser.id < userid 
+      ? `${currentUser.id}_${userid}`
+      : `${userid}_${currentUser.id}`;
 
     if (!conversations[conversationId]) {
       conversations[conversationId] = [];
@@ -200,9 +185,9 @@ window.onload = function () {
     let newMessageElement = document.createElement("div");
     newMessageElement.className = "message sent";
     newMessageElement.innerHTML = `
-        <div class="message-text">${message}</div>
-        <div class="message-time">${timeString}</div>
-      `;
+      <div class="message-text">${message}</div>
+      <div class="message-time">${timeString}</div>
+    `;
 
     let messagesContainer = document.querySelector(".chat-messages");
     if (messagesContainer) {
@@ -235,15 +220,13 @@ window.onload = function () {
     let conversations = JSON.parse(localStorage.getItem("conversations")) || {};
 
     friends.forEach((friend) => {
-      const conversationId =
-        currentUser.id < friend.id
-          ? `${currentUser.id}_${friend.id}`
-          : `${friend.id}_${currentUser.id}`;
+      const conversationId = currentUser.id < friend.id
+        ? `${currentUser.id}_${friend.id}`
+        : `${friend.id}_${currentUser.id}`;
 
       const convoMessages = conversations[conversationId] || [];
       const hasUnreadMessages = convoMessages.some(
-        (msg) =>
-          msg.sender == friend.id && msg.timestamp > (friend.lastSeen || 0)
+        (msg) => msg.sender == friend.id && msg.timestamp > (friend.lastSeen || 0)
       );
 
       if (hasUnreadMessages && selectedFriendId != friend.id) {
@@ -266,30 +249,26 @@ window.onload = function () {
     if (!messagesContainer) return;
 
     messagesContainer.innerHTML = "";
-    const conversationId =
-      currentUser.id < userid
-        ? `${currentUser.id}_${userid}`
-        : `${userid}_${currentUser.id}`;
+    const conversationId = currentUser.id < userid
+      ? `${currentUser.id}_${userid}`
+      : `${userid}_${currentUser.id}`;
 
     let conversations = JSON.parse(localStorage.getItem("conversations")) || {};
     let conversationMessages = conversations[conversationId] || [];
     conversationMessages.sort((a, b) => a.timestamp - b.timestamp);
 
     conversationMessages.forEach((message) => {
-      let timeString = message.timestamp
-        ? new Date(message.timestamp).toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-          })
-        : "";
+      let timeString = message.timestamp ? new Date(message.timestamp).toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      }) : "";
 
       let newMessage = document.createElement("div");
-      newMessage.className =
-        message.sender == currentUser.id ? "message sent" : "message received";
+      newMessage.className = message.sender == currentUser.id ? "message sent" : "message received";
       newMessage.innerHTML = `
-          <div class="message-text">${message.message}</div>
-          <div class="message-time">${timeString}</div>
-        `;
+        <div class="message-text">${message.message}</div>
+        <div class="message-time">${timeString}</div>
+      `;
       messagesContainer.appendChild(newMessage);
     });
 
@@ -307,13 +286,11 @@ window.onload = function () {
         myFriend(friend.id);
       };
 
-      const conversationId =
-        currentUser.id < friend.id
-          ? `${currentUser.id}_${friend.id}`
-          : `${friend.id}_${currentUser.id}`;
+      const conversationId = currentUser.id < friend.id
+        ? `${currentUser.id}_${friend.id}`
+        : `${friend.id}_${currentUser.id}`;
 
-      const conversations =
-        JSON.parse(localStorage.getItem("conversations")) || {};
+      const conversations = JSON.parse(localStorage.getItem("conversations")) || {};
       const convoMessages = conversations[conversationId] || [];
 
       let lastMessageText = "";
@@ -321,10 +298,9 @@ window.onload = function () {
 
       if (convoMessages.length > 0) {
         const lastMsg = convoMessages[convoMessages.length - 1];
-        lastMessageText =
-          lastMsg.message.length > 20
-            ? lastMsg.message.substring(0, 20) + "..."
-            : lastMsg.message;
+        lastMessageText = lastMsg.message.length > 20
+          ? lastMsg.message.substring(0, 20) + "..."
+          : lastMsg.message;
 
         if (lastMsg.timestamp) {
           lastMessageTime = new Date(lastMsg.timestamp).toLocaleTimeString([], {
@@ -334,17 +310,15 @@ window.onload = function () {
         }
       }
 
-      const avatarSrc = generateAvatar(
-        `${friend.firstName} ${friend.lastName}`
-      );
+      const avatarSrc = generateAvatar(`${friend.firstName} ${friend.lastName}`);
       friendElement.innerHTML = `
-          <img src="${avatarSrc}" alt="${friend.firstName} ${friend.lastName} profile image" />
-          <div class="friend-info">
-            <div class="friend-name">${friend.firstName} ${friend.lastName}</div>
-            <div class="last-message">${lastMessageText}</div>
-          </div>
-          <div class="message-time">${lastMessageTime}</div>
-        `;
+        <img src="${avatarSrc}" alt="${friend.firstName} ${friend.lastName} profile image" />
+        <div class="friend-info">
+          <div class="friend-name">${friend.firstName} ${friend.lastName}</div>
+          <div class="last-message">${lastMessageText}</div>
+        </div>
+        <div class="message-time">${lastMessageTime}</div>
+      `;
       friendsList.appendChild(friendElement);
     });
 
@@ -353,13 +327,11 @@ window.onload = function () {
     }
   }
 
-  document
-    .getElementById("logout-button")
-    .addEventListener("click", function () {
-      sessionStorage.removeItem("isLoggedIn");
-      sessionStorage.removeItem("currentUser");
-      window.location.href = "login.html";
-    });
+  document.getElementById("logout-button").addEventListener("click", function () {
+    sessionStorage.removeItem("isLoggedIn");
+    sessionStorage.removeItem("currentUser");
+    window.location.href = "login.html";
+  });
 
   setInterval(checkForNewMessages, 3000);
 };
