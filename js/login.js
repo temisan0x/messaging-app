@@ -82,7 +82,6 @@ document.getElementById("login-form").addEventListener("submit", function (e) {
   try {
     const passwordValid = bcrypt.compareSync(password, user.password);
     if (passwordValid) {
-      // FIX: Store user in correct sessionStorage key
       sessionStorage.setItem("currentUser", JSON.stringify(user));
       sessionStorage.setItem("isLoggedIn", "true");
       window.location.href = "index.html";
